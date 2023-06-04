@@ -5,6 +5,7 @@
 #include "Service functions.h"
 #include <windows.h>
 #include <map>
+#include <iomanip>
 
 //std::string _f_NAMES_[]{ "Olga", "Svetlana", "Oxana", "Irina", "Marina", "Alexandra", "Natalya" };
 //std::string _m_NAMES_[]{ "Petr", "Daniil", "Oleg", "Igor", "Nikita", "Artem", "Sergio" };
@@ -44,13 +45,23 @@ public:
 		_sex = Get_Random(1, 3);
 		if (_sex == 1)
 		{
-			_FIO = _m_NAMES_[Get_Random(0, _m_NAMES_->size())] + _m_SURNAMES_[Get_Random(0, _m_SURNAMES_->size())];
+			_FIO = _m_NAMES_[Get_Random(0, _m_NAMES_->size()-1)] + " " + _m_SURNAMES_[Get_Random(0, _m_SURNAMES_->size()-1)];
 		}
 		else
 		{
-			_FIO = _f_NAMES_[Get_Random(0, _f_NAMES_->size())] + _f_SURNAMES_[Get_Random(0, _f_SURNAMES_->size())];
+			_FIO = _f_NAMES_[Get_Random(0, _f_NAMES_->size()-1)] + " " + _f_SURNAMES_[Get_Random(0, _f_SURNAMES_->size()-1)];
 		}
-		_birth_year = Get_Random(1900, 2023);
+		_birth_year = Get_Random(1950, 2023);
+	}
+	void ShowInfo()
+	{
+		std::cout << "\nFIO:        " << _FIO;
+		std::cout << "\nBirth Year: " << _birth_year;
+		if (_sex == 1)
+		std::cout << "\nsex:        male";
+		else
+		std::cout << "\nsex:        female";
+		std::cout << "\n\n";
 	}
 };
 
@@ -74,6 +85,19 @@ public:
 	int GetFlatNumber()
 	{
 		return _flat_number;
+	}
+	int GetinHabbitansAmount()
+	{
+		return inHabbitant_list_vct.size();
+	}
+	void ShowInfo()
+	{
+		std::cout << "\nFlat number " << _flat_number << " detailed info:\n";
+		for (int i = 0; i < inHabbitant_list_vct.size(); i++)
+		{
+			std::cout << "[" << i + 1 << "]";
+			inHabbitant_list_vct[i]->ShowInfo();
+		}
 	}
 };
 
@@ -103,6 +127,15 @@ public:
 	int GetFlatAmount()
 	{
 		return _flats_list_vct.size();
+	}
+	void ShowInfo()
+	{
+		std::cout << "\nFloor number " << _floor_number << " detailed info:\n";
+		for (int i = 0; i < _flats_list_vct.size(); i++)
+		{
+			std::cout << "Flat N" << _flats_list_vct[i]->GetFlatNumber() <<
+				"\t inHabbitans total: " << _flats_list_vct[i]->GetinHabbitansAmount() << "\n";
+		}
 	}
 
 };
@@ -143,12 +176,12 @@ public:
 			"House number " << _house_number << "\n\n";
 		for (int i = _floors_list_vct.size()-1; i >= 0; i--)
 		{
-			std::cout << "floor  " << _floors_list_vct[i]->GetFloorNumber() <<"\tflats: ";
+			std::cout << "floor" << std::setw(4) << _floors_list_vct[i]->GetFloorNumber() <<"\tflats: ";
 			
 			_floors_list_vct[i]->GetFlatAmount();
 			for (int ii = _floors_list_vct[i]->GetFlatAmount() - 1; ii >= 0; ii--)
 			{
-				std::cout << _floors_list_vct[i]->GetFlatObj(ii)->GetFlatNumber() << " | ";
+				std::cout <<std::setw(3) << _floors_list_vct[i]->GetFlatObj(ii)->GetFlatNumber() << " | ";
 			}
 			std::cout << "\b\b \n";
 			//_flats_list_vct.size() - квартир на этаже
@@ -157,6 +190,10 @@ public:
 				//for (int ii=0;i< _floors_list_vct.)
 		}
 
+	}
+	Floor* GetFloorObj(int floor_number)
+	{
+		return _floors_list_vct[floor_number];
 	}
 };
 
@@ -206,18 +243,52 @@ public:
 	static void ShowMethods()
 	{
 		std::cout << "\nAvailable methods:\n";
-		std::cout << "\n1) Show Street info\n" <<
-			"2) Show House info [House number]\n" <<
-			"3) Show Flat info [Flatr number]\n\n";
+		std::cout << "\n1) Show Street info ->" <<
+			" Show House info [House number] ->" <<
+			" Show Flat info [Flat number]";
+		std::cout << "\n2) Add new inHabbitant\n";
 	}
 	void UserChoiceHandle()
 	{
+		int selected_house, floor_number, selected_flat_number, flatObj_index, flat_total_on_floor;
 		switch (Get_Int_Positive())
 		{
-		case 1: ShowInfo(); break;
-		case 2: 
+		case 1:
+			ShowInfo();
 			std::cout << "\nEnter a house number: ";
-			House_list_vct[Get_Int_Positive()-1]->ShowInfo();
+			selected_house = Get_Int_Positive();
+			selected_house--; //траснсформируем номер в индекс
+			House_list_vct[selected_house]->ShowInfo();
+			std::cout << "\nEnter a floor number: ";
+			floor_number = Get_Int_Positive();
+			floor_number--; //траснсформируем номер в индекс
+			House_list_vct[selected_house]->GetFloorObj(floor_number)->ShowInfo();
+
+			std::cout << "\nEnter a flat number: ";
+			selected_flat_number = Get_Int_Positive();
+			flat_total_on_floor = House_list_vct[selected_house]->GetFloorObj(floor_number)->GetFlatAmount();
+
+			for (int i = 0; i < flat_total_on_floor; i++)
+			{
+				if (selected_flat_number == House_list_vct[selected_house]->GetFloorObj(floor_number)->GetFlatObj(i)->GetFlatNumber())
+					flatObj_index = i;
+			}
+
+			House_list_vct[selected_house]->GetFloorObj(floor_number)->GetFlatObj(flatObj_index)->ShowInfo();
+			break;
+		case 2: break;
+			//House_list_vct[Get_Int_Positive()-1]->ShowInfo();
 		}
+	}
+	void AddNewinHabbitant()
+	{
+		inHabbitant* tmp_ptr = new inHabbitant();
+		std::cout << "\nAdd new inHabbitant in house number ";
+		int selected_house = Get_Int_Positive();
+		std::cout << "\nAdd new inHabbitant in house number " << selected_house << " at floor ";
+		int selected_house = Get_Int_Positive();
+		std::cout << "\nAdd new inHabbitant in house number";
+		int selected_house = Get_Int_Positive();
+		 
 	}
 };

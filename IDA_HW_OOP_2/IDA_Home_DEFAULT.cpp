@@ -27,10 +27,10 @@ void Task_1()
 
 		std::cout << "\nHouse class demonstration\n\n" << 
 			"New dataset generated with following parametrs : \n";
-		std::cout << "max_house" << max_house;
-		std::cout << "\tmax_floors" << max_floors;
-		std::cout << "\tmax_flats" << max_flats;
-		std::cout << "\tmax_inHabbitans" << max_inHabbitans << "\n\n";
+		std::cout << "max_house = " << max_house;
+		std::cout << "\tmax_floors = " << max_floors;
+		std::cout << "\tmax_flats = " << max_flats;
+		std::cout << "\tmax_inHabbitans = " << max_inHabbitans << "\n\n";
 
 		Street::ShowMethods();
 		Lenina.UserChoiceHandle();
@@ -49,7 +49,8 @@ void Task_3() {}
 int main()
 {
 	//setlocale(LC_CTYPE, "Russian");
-	//system("mode con cols=110 lines=40"); 
+	system("mode con cols=100 lines=40"); 
+	srand(time(NULL));
 
 	Main_menu MainMenu;	
 	MainMenu.AddElement("OOP Home Work 2: Classes. Continue");	// Homework name
