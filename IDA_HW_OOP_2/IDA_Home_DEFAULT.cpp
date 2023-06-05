@@ -17,11 +17,9 @@
 void Task_1()
 {
 	Street Lenina("Lenina");
-	int max_house = 11, max_floors = 31, max_flats = 5, max_inHabbitans = 5;
-	//Lenina.RandomFill(10, 30, 5, 5); // max_house, max_floors, max_flats
-	Lenina.RandomFill(max_house, max_floors, max_flats, max_inHabbitans);
-	
-	do
+	int max_house = 10, max_floors = 30, max_flats = 5, max_inHabbitans = 5;
+	Lenina.RandomFill(max_house, max_floors, max_flats, max_inHabbitans);	
+		do
 	{
 		system("cls");
 
@@ -34,9 +32,8 @@ void Task_1()
 
 		Street::ShowMethods();
 		Lenina.UserChoiceHandle();
-		//Lenina.ShowInfo();
 
-
+		std::cout << "\nEsc - exit | any key to continue";
 	} while (_getch() != 27);
 }
 //Task 2
@@ -55,7 +52,7 @@ int main()
 	Main_menu MainMenu;	
 	MainMenu.AddElement("OOP Home Work 2: Classes. Continue");	// Homework name
 	MainMenu.AddElement("House with flats");		// Menu element 1
-	MainMenu.AddElement("Reservour");				// Menu element 2
+	//MainMenu.AddElement("Reservour");				// Menu element 2
 	//MainMenu.AddElement("XXX");
 
 	do 

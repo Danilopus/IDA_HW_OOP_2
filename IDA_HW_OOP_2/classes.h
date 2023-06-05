@@ -16,7 +16,19 @@ static std::string _f_NAMES_[]{ "Olga", "Svetlana", "Oxana", "Irina", "Marina", 
 static std::string _m_NAMES_[]{ "Petr", "Daniil", "Oleg", "Igor", "Nikita", "Artem", "Sergio" };
 static std::string _f_SURNAMES_[]{ "Platonova", "Makarova", "Popova", "Ivanova", "Starodubceva", "Yachmeneva", "Kalmykova" };
 static std::string _m_SURNAMES_[]{ "Platonov", "Makarov", "Popov", "Ivanov", "Starodubcev", "Yachmenev", "Kalmykov" };
+//так придумал учитывать номер квартиры в привязке к номеру дома
+// 1) без static не работает
+// 2) как еще можно учесть номера квартир?
 static std::map<int, int> _FLAT_NUMBERS_MAP_;
+//std::map<int, int> _FLAT_NUMBERS_MAP_;
+
+struct Flat_credentional
+{
+	int selected_house_index;
+	int floor_number_index;
+	int _flatObj_index;
+	int selected_flat_number;
+};
 
 class Main_menu
 {
@@ -40,65 +52,27 @@ public:
 	//inHabbitant (std::string FIO, int birth_year, sex { male, female })
 	inHabbitant(std::string FIO, int birth_year, char sex);
 	inHabbitant();
-	inHabbitant(char random_flag)
-	{
-		_sex = Get_Random(1, 3);
-		if (_sex == 1)
-		{
-			_FIO = _m_NAMES_[Get_Random(0, _m_NAMES_->size()-1)] + " " + _m_SURNAMES_[Get_Random(0, _m_SURNAMES_->size()-1)];
-		}
-		else
-		{
-			_FIO = _f_NAMES_[Get_Random(0, _f_NAMES_->size()-1)] + " " + _f_SURNAMES_[Get_Random(0, _f_SURNAMES_->size()-1)];
-		}
-		_birth_year = Get_Random(1950, 2023);
-	}
-	void ShowInfo()
-	{
-		std::cout << "\nFIO:        " << _FIO;
-		std::cout << "\nBirth Year: " << _birth_year;
-		if (_sex == 1)
-		std::cout << "\nsex:        male";
-		else
-		std::cout << "\nsex:        female";
-		std::cout << "\n\n";
-	}
+	inHabbitant(char random_flag);
+	inHabbitant(inHabbitant* inHabbitant_obj);	
+	void ShowInfo();	
 };
 
 class Flat
 {
 	int _flat_number;
 	int inHabbitant_size = 5;
+	// по заданию было про динамические массивы, но я заменил векторами, и так возни хватило
 	//inHabbitant* inHabbitant_list_da = new inHabbitant[inHabbitant_size];
 	std::vector<inHabbitant*> inHabbitant_list_vct;
 public:
-	Flat(int max_inHabbitans, int NewHouseNumber)
-	{
-		int inHabbitans_amount = Get_Random(max_inHabbitans / 2, max_inHabbitans + 1);
-		for (int i = 0; i < inHabbitans_amount; i++)
-		{
-			inHabbitant* tmp_ptr = new inHabbitant(1);
-			inHabbitant_list_vct.push_back(tmp_ptr);
-		}
-		_flat_number = ++_FLAT_NUMBERS_MAP_[NewHouseNumber]; //учитываем номера квартир в привязке к дому
-	}
-	int GetFlatNumber()
-	{
-		return _flat_number;
-	}
-	int GetinHabbitansAmount()
-	{
-		return inHabbitant_list_vct.size();
-	}
-	void ShowInfo()
-	{
-		std::cout << "\nFlat number " << _flat_number << " detailed info:\n";
-		for (int i = 0; i < inHabbitant_list_vct.size(); i++)
-		{
-			std::cout << "[" << i + 1 << "]";
-			inHabbitant_list_vct[i]->ShowInfo();
-		}
-	}
+	Flat(int max_inHabbitans, int NewHouseNumber);
+	int GetFlatNumber()	{	return _flat_number;	}
+	int GetinHabbitansAmount()	{ return inHabbitant_list_vct.size(); }
+	void ShowInfo();
+	void AddNewinHabbitant(inHabbitant* tmp_ptr)	{inHabbitant_list_vct.push_back(tmp_ptr);}
+	void DeleteinHabbitant(int selected_inHabbitant_index);
+	inHabbitant* GetinHabbitantObj(int inHabbitant_index)	{ return inHabbitant_list_vct[inHabbitant_index]; }
+	~Flat();
 };
 
 class Floor
@@ -106,38 +80,12 @@ class Floor
 	int _floor_number;
 	std::vector<Flat*> _flats_list_vct;
 public:
-	Floor(int max_flats, int max_inHabbitans, int NextFloorNumer, int NewHouseNumber)
-	{
-		for (int i = 0; i < max_flats; i++)
-		{
-			Flat* tmp_ptr = new Flat(max_inHabbitans, NewHouseNumber);
-			_flats_list_vct.push_back(tmp_ptr); 
-		}
-		//_floor_number = House::GetNewFloorNumber();
-		_floor_number = NextFloorNumer;
-	}
-	int GetFloorNumber()
-	{
-		return _floor_number;
-	}
-	Flat*& GetFlatObj(int index)
-	{
-		return _flats_list_vct[index];
-	}
-	int GetFlatAmount()
-	{
-		return _flats_list_vct.size();
-	}
-	void ShowInfo()
-	{
-		std::cout << "\nFloor number " << _floor_number << " detailed info:\n";
-		for (int i = 0; i < _flats_list_vct.size(); i++)
-		{
-			std::cout << "Flat N" << _flats_list_vct[i]->GetFlatNumber() <<
-				"\t inHabbitans total: " << _flats_list_vct[i]->GetinHabbitansAmount() << "\n";
-		}
-	}
-
+	Floor(int max_flats, int max_inHabbitans, int NextFloorNumer, int NewHouseNumber);
+	int GetFloorNumber()	{ return _floor_number; }
+	Flat*& GetFlatObj(int index)	{ return _flats_list_vct[index]; }
+	int GetFlatAmount()	{ return _flats_list_vct.size(); }
+	void ShowInfo();
+	~Floor();
 };
 
 class House
@@ -146,55 +94,12 @@ class House
 	Floor* _floors_list_da;
 	std::vector<Floor*> _floors_list_vct;
 public:
-	House(int max_floors, int max_flats, int max_inHabbitans, int NewHouseNumber)
-	{
-		int floors_amount = Get_Random(max_floors / 2, max_floors + 1);
-		for (int i = 0; i < floors_amount; i++)
-		{
-			Floor* tmp_ptr = new Floor(max_flats, max_inHabbitans, _floors_list_vct.size()+1, NewHouseNumber);
-			_floors_list_vct.push_back(tmp_ptr);
-		}
-		//_house_number = Street::GetNewHouseNumber(); //????
-		_house_number = NewHouseNumber;
-
-	}
-	//static int GetNewFloorNumber()
-	//{
-	//	return _floors_list_vct.size(); //???
-	//}
-	int GetHouseNumber()
-	{
-		return _house_number;
-	}
-	int GetFloorsTotal()
-	{
-		return _floors_list_vct.size();;
-	}
-	void ShowInfo()
-	{
-		std::cout << "Detailed information " <<
-			"House number " << _house_number << "\n\n";
-		for (int i = _floors_list_vct.size()-1; i >= 0; i--)
-		{
-			std::cout << "floor" << std::setw(4) << _floors_list_vct[i]->GetFloorNumber() <<"\tflats: ";
-			
-			_floors_list_vct[i]->GetFlatAmount();
-			for (int ii = _floors_list_vct[i]->GetFlatAmount() - 1; ii >= 0; ii--)
-			{
-				std::cout <<std::setw(3) << _floors_list_vct[i]->GetFlatObj(ii)->GetFlatNumber() << " | ";
-			}
-			std::cout << "\b\b \n";
-			//_flats_list_vct.size() - квартир на этаже
-			
-		
-				//for (int ii=0;i< _floors_list_vct.)
-		}
-
-	}
-	Floor* GetFloorObj(int floor_number)
-	{
-		return _floors_list_vct[floor_number];
-	}
+	House(int max_floors, int max_flats, int max_inHabbitans, int NewHouseNumber);
+	int GetHouseNumber()	{ return _house_number; }
+	int GetFloorsTotal()	{ return _floors_list_vct.size(); }
+	void ShowInfo();
+	Floor* GetFloorObj(int floor_number)	{ return _floors_list_vct[floor_number]; }
+	~House();
 };
 
 class Street
@@ -204,91 +109,15 @@ class Street
 	//static std::vector<House*> House_list_vct;
 public:
 	Street(std::string name) : _street_name(name) {}
-	void RandomFill(int max_house, int max_floors, int max_flats, int max_inHabbitans)
-	{
-		int house_amount = Get_Random(max_house / 2, max_house + 1);
-		for (int i = 0; i < house_amount; i++)
-		{
-			int NewHouseNumber = House_list_vct.size();
-			House* tmp_ptr = new House(max_floors, max_flats, max_inHabbitans, ++NewHouseNumber);
-			House_list_vct.push_back(tmp_ptr);
-		}
-	}
-	void AddinHabbitant()
-	{
-		//заселяем жильца в конкретный дом, этаж, квартиру 
-	}
-	//int GetNewHouseNumber()
-	//static int GetNewHouseNumber()
-	//{
-	//	return House_list_vct.size();
-	//}
-	void ShowInfo()
-	{
-		std::cout << "\nStreet " << _street_name << " information:\n";
-		std::cout << "\nNumbers of houses: " << House_list_vct.size();
-		std::cout << "\n\nHouses information:\n";
-			for (int i = 0; i < House_list_vct.size(); i++)
-			{
-				std::cout << _street_name << ", " << House_list_vct[i]->GetHouseNumber();
-				std::cout << "\tfloors: " << House_list_vct[i]->GetFloorsTotal();
-				
-				int flats_total = _FLAT_NUMBERS_MAP_[House_list_vct[i]->GetHouseNumber()];
-				std::cout << "\tflats total: " << flats_total;
-				std::cout << "\n";
-			}
-			//<< House_list_vct.size();
-
-	}
-	static void ShowMethods()
-	{
-		std::cout << "\nAvailable methods:\n";
-		std::cout << "\n1) Show Street info ->" <<
-			" Show House info [House number] ->" <<
-			" Show Flat info [Flat number]";
-		std::cout << "\n2) Add new inHabbitant\n";
-	}
-	void UserChoiceHandle()
-	{
-		int selected_house, floor_number, selected_flat_number, flatObj_index, flat_total_on_floor;
-		switch (Get_Int_Positive())
-		{
-		case 1:
-			ShowInfo();
-			std::cout << "\nEnter a house number: ";
-			selected_house = Get_Int_Positive();
-			selected_house--; //траснсформируем номер в индекс
-			House_list_vct[selected_house]->ShowInfo();
-			std::cout << "\nEnter a floor number: ";
-			floor_number = Get_Int_Positive();
-			floor_number--; //траснсформируем номер в индекс
-			House_list_vct[selected_house]->GetFloorObj(floor_number)->ShowInfo();
-
-			std::cout << "\nEnter a flat number: ";
-			selected_flat_number = Get_Int_Positive();
-			flat_total_on_floor = House_list_vct[selected_house]->GetFloorObj(floor_number)->GetFlatAmount();
-
-			for (int i = 0; i < flat_total_on_floor; i++)
-			{
-				if (selected_flat_number == House_list_vct[selected_house]->GetFloorObj(floor_number)->GetFlatObj(i)->GetFlatNumber())
-					flatObj_index = i;
-			}
-
-			House_list_vct[selected_house]->GetFloorObj(floor_number)->GetFlatObj(flatObj_index)->ShowInfo();
-			break;
-		case 2: break;
-			//House_list_vct[Get_Int_Positive()-1]->ShowInfo();
-		}
-	}
-	void AddNewinHabbitant()
-	{
-		inHabbitant* tmp_ptr = new inHabbitant();
-		std::cout << "\nAdd new inHabbitant in house number ";
-		int selected_house = Get_Int_Positive();
-		std::cout << "\nAdd new inHabbitant in house number " << selected_house << " at floor ";
-		int selected_house = Get_Int_Positive();
-		std::cout << "\nAdd new inHabbitant in house number";
-		int selected_house = Get_Int_Positive();
-		 
-	}
+	void RandomFill(int max_house, int max_floors, int max_flats, int max_inHabbitans);	
+	void ShowInfo();
+	static void ShowMethods();
+	Flat_credentional LocationSpecify();
+	void UserChoiceHandle();
+	void CopyinHabbitant(Flat_credentional Flat_credentional_tmp);
+	void AddNewinHabbitant(Flat_credentional Flat_credentional_tmp);
+	void DeleteinHabbitant(Flat_credentional Flat_credentional_tmp);
+	~Street();
 };
+
+
