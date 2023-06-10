@@ -8,6 +8,8 @@
 //My own headers
 #include "Service functions.h"
 #include "classes.h"
+#include "Reservoir.h"
+
 
 
 
@@ -36,8 +38,38 @@ void Task_1()
 		std::cout << "\nEsc - exit | any key to continue";
 	} while (_getch() != 27);
 }
-//Task 2
-void Task_2(){}
+
+//Task 2 Reservoir
+void Task_2()
+{
+	//Reservoir_fabric_parametrs: max_reservoirs_amount, double max_depth, double max_width, double max_length
+	//measerment unit - meters
+	Reservoir_fabric_parametrs fabric_parametrs{ 1e1, 5e3, 1e7, 1e7 };
+
+	int Current_Reservoirs_amount = Get_Random(fabric_parametrs.max_reservoirs_amount / 2, fabric_parametrs.max_reservoirs_amount);
+	Reservoir* Reservoirs_dataset = new Reservoir[Current_Reservoirs_amount];
+	Reservoir::Reservoir_fabric(Current_Reservoirs_amount, Reservoirs_dataset, fabric_parametrs);
+
+	do
+	{
+		system("cls");
+
+		std::cout << "\nReservoir class demonstration\n\n" <<
+			"New dataset generated with following parametrs : \n";
+		std::cout << "max_reservoirs_amount = " << fabric_parametrs.max_reservoirs_amount;
+		std::cout << "\tmax_depth = " << fabric_parametrs.max_depth;
+		std::cout << "\tmax_length = " << fabric_parametrs.max_length;
+		std::cout << "\tmax_width = " << fabric_parametrs.max_width << "\n\n";
+
+		Reservoir::ShowMethods();
+		//так и не придумал как можно при внешнем хранении объектов получить к ним доступ не передавая параметров и не прописывая static хранилища
+		Reservoir::UserChoiceHandle(Current_Reservoirs_amount, Reservoirs_dataset);
+
+		std::cout << "\nEsc - exit | any key to continue";
+	} while (_getch() != 27);
+	// через деструктор не смог реализовать очистку памяти, только вот так
+	Reservoir::Memory_clean(Reservoirs_dataset);
+}
 //Task 3
 void Task_3() {}
 
@@ -46,13 +78,13 @@ void Task_3() {}
 int main()
 {
 	//setlocale(LC_CTYPE, "Russian");
-	system("mode con cols=100 lines=40"); 
+	//system("mode con cols=100 lines=40"); 
 	srand(time(NULL));
 
 	Main_menu MainMenu;	
 	MainMenu.AddElement("OOP Home Work 2: Classes. Continue");	// Homework name
 	MainMenu.AddElement("House with flats");		// Menu element 1
-	//MainMenu.AddElement("Reservour");				// Menu element 2
+	MainMenu.AddElement("Reservoir");				// Menu element 2
 	//MainMenu.AddElement("XXX");
 
 	do 

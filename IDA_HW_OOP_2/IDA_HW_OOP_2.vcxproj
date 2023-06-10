@@ -129,10 +129,12 @@
   <ItemGroup>
     <ClCompile Include="classes.cpp" />
     <ClCompile Include="IDA_Home_DEFAULT.cpp" />
+    <ClCompile Include="Reservoir.cpp" />
     <ClCompile Include="Service functions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classes.h" />
+    <ClInclude Include="Reservoir.h" />
     <ClInclude Include="Service functions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
