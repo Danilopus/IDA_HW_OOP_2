@@ -1,63 +1,49 @@
 
 Reservoir 1
-name:          ocean8
-type:          ocean
-depth:         3430.159270
-surface area:  32655611458658.730469 sqr m
-approx volume: 112013948362346768.000000 cubic m
+name:          sea40
+type:          sea
+depth:         400.717185
+surface area:  242488549907.801880 sqr m
+approx volume: 97169329107163.031250 cubic m
 
 Reservoir 2
-name:          ocean2
-type:          ocean
-depth:         921.893142
-surface area:  5440253590916.324219 sqr m
-approx volume: 5015332478877366.000000 cubic m
+name:          lake73
+type:          lake
+depth:         15.763115
+surface area:  7746313.020758 sqr m
+approx volume: 122106025.524210 cubic m
 
 Reservoir 3
-name:          sea78
-type:          sea
-depth:         1930.051939
-surface area:  414296494754.125610 sqr m
-approx volume: 799613753208065.875000 cubic m
+name:          small reservoir65
+type:          small reservoir
+depth:         0.413450
+surface area:  0.192035 sqr m
+approx volume: 0.079397 cubic m
 
 Reservoir 4
-name:          ocean60
+name:          ocean86
 type:          ocean
-depth:         2003.905255
-surface area:  6325518159331.758789 sqr m
-approx volume: 12675739081900360.000000 cubic m
+depth:         2498.825037
+surface area:  38152639293313.109375 sqr m
+approx volume: 95336770308456192.000000 cubic m
 
 Reservoir 5
-name:          ocean58
-type:          ocean
-depth:         1253.470116
-surface area:  29280758964814.546875 sqr m
-approx volume: 36702556344261592.000000 cubic m
+name:          pool15
+type:          pool
+depth:         2.391400
+surface area:  542.522494 sqr m
+approx volume: 1297.388228 cubic m
 
 Reservoir 6
-name:          ocean85
+name:          ocean12
 type:          ocean
-depth:         27.413520
-surface area:  45064889199271.250000 sqr m
-approx volume: 1235387227828924.000000 cubic m
+depth:         1832.056642
+surface area:  4991332216148.064453 sqr m
+approx volume: 9144403340787514.000000 cubic m
 
 Reservoir 7
-name:          ocean89
-type:          ocean
-depth:         1239.279293
-surface area:  4531713245139.324219 sqr m
-approx volume: 5616058387382007.000000 cubic m
-
-Reservoir 8
-name:          ocean98
-type:          ocean
-depth:         1377.067608
-surface area:  4561541635787.775391 sqr m
-approx volume: 6281551227608577.000000 cubic m
-
-Reservoir 9
-name:          ocean28
-type:          ocean
-depth:         4724.728550
-surface area:  77185455140438.562500 sqr m
-approx volume: 364680323551838784.000000 cubic m
+name:          my
+type:          pool
+depth:         5.000000
+surface area:  500.000000 sqr m
+approx volume: 2500.000000 cubic m
